@@ -11,13 +11,13 @@ import jakarta.persistence.*;
 @DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING)
 @Data
 @NoArgsConstructor
-public class Usuario {
+public abstract class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    protected Integer id;
 
-    private String nombre;
-    private String email;
-    private String telefono;
+    protected String nombre;
+    protected String email;
+    protected String telefono;
     
 }

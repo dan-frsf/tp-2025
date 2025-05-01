@@ -20,6 +20,10 @@ import jakarta.persistence.*;
 public class TarjetaCredito {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "numero_tarjeta")
     private String numero;
 
     @Column(name = "nombre_titular")
@@ -36,7 +40,7 @@ public class TarjetaCredito {
     private Banco banco;
 
     @ManyToOne
-    @JoinColumn(name = "huesped_id")
+    @JoinColumn(name = "usuario_id")
     @JsonIgnore
     private Huesped huesped;
 

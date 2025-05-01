@@ -14,6 +14,7 @@ public record HuespedRecord(
     String telefono,
     LocalDate fechaNacimiento,
     String numeroCC,
+    String nombreTitular,
     String fechaVencimientoCC,
     String cvcCC,
     Boolean esPrincipalCC,
@@ -29,6 +30,7 @@ public record HuespedRecord(
         huesped.setTarjetaCredito(new ArrayList<>(List.of(
             TarjetaCredito.builder()
             .numero(this.numeroCC)
+            .nombreTitular(this.nombreTitular)
             .fechaVencimiento(this.fechaVencimientoCC)
             .cvc(this.cvcCC)
             .esPrincipal(this.esPrincipalCC)
@@ -43,6 +45,7 @@ public record HuespedRecord(
         return TarjetaCredito.builder()
             .numero(this.numeroCC)
             .fechaVencimiento(this.fechaVencimientoCC)
+            .nombreTitular(this.nombreTitular)
             .cvc(this.cvcCC)
             .esPrincipal(this.esPrincipalCC)
             .build();

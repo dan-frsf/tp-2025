@@ -18,6 +18,7 @@ public class Propietario extends Usuario {
 
     @Column(name = "hotel_id")
     private Long idHotel;
-
-    // Getters y setters...
+    // solo guardo el id del hotel, no la entidad Hotel 
+    // porque se gestiona en otro microservicio
+    // entonces la consistencia aquí será eventual
 }

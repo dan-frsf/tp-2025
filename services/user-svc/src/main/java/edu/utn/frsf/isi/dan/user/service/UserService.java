@@ -24,7 +24,8 @@ public class UserService {
     @Autowired
     private BancoRepository bancoRepository;
 
-    @Autowired CuentaBancariaRepository cuentaBancariaRepository;
+    @Autowired 
+    private CuentaBancariaRepository cuentaBancariaRepository;
 
     @Autowired
     private TarjetaCreditoRepository tarjetaCreditoRepository;

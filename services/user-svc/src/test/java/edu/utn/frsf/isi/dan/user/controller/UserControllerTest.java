@@ -45,6 +45,7 @@ public class UserControllerTest {
             "9876543210", 
             LocalDate.of(1990, 5, 15), 
             "1234567890123456", 
+            "martin",
             "12/25", 
             "123", 
             true, 

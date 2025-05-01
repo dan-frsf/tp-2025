@@ -19,7 +19,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Operation(summary = "Crear usuario huesped", description = "Crea un nuevo usuario de tipo huesped")
+    @Operation(summary = "Crear usuario huesped", 
+                description = "Crea un nuevo usuario de tipo huesped",
+                responses = {
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Usuario huesped creado exitosamente"),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Error en la solicitud"),
+                    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", description = "Error interno del servidor")}
+    )
     @PostMapping("/huesped")
     public ResponseEntity<Void> crearUsuarioHuesped(@RequestBody HuespedRecord huespedRecord) {
         userService.crearUsuarioHuesped(huespedRecord);

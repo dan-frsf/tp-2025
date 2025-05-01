@@ -6,8 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 
+// anotaciones de jpa
 @Entity
 @Table(name = "bancos")
+// anotaciones de lombok
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
