@@ -1,0 +1,51 @@
+classDiagram
+    %% ========= Clases =========
+    class Usuario {
+        +Integer id
+        +String nombre
+        +String email
+        +String telefono
+    }
+
+    class Propietario {
+        +CuentaBancaria cuentaBancaria
+        +Long idHotel
+    }
+
+    class Huesped {
+        +LocalDate fechaNacimiento
+        +List~TarjetaCredito~ tarjetaCredito
+    }
+
+    class Banco {
+        +Integer id
+        +String nombre
+    }
+
+    class CuentaBancaria {
+        +Integer id
+        +String numeroCuenta
+        +String cbu
+        +String alias
+    }
+
+    class TarjetaCredito {
+        +String numero
+        +String nombreTitular
+        +String fechaVencimiento
+        +String cvc
+        +Boolean esPrincipal
+    }
+
+    %% ========= Relaciones =========
+    Usuario <|-- Propietario
+    Usuario <|-- Huesped
+
+    Propietario  "1" --> "1"      CuentaBancaria : posee
+    CuentaBancaria "1" --> "1"    Banco          : pertenece
+
+    Huesped      "1" --> "0..*"   TarjetaCredito : tiene
+    TarjetaCredito "0..*" --> "1" Banco          : emitida~por
+    TarjetaCredito "0..*" --> "1" Huesped        : pertenece~a
+
+    Banco        "1" --> "0..*"   CuentaBancaria : ofrece
