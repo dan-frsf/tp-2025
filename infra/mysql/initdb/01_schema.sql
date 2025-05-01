@@ -36,5 +36,7 @@ CREATE TABLE users.tarjetas_credito (
     codigo_seguridad VARCHAR(4) NOT NULL,
     es_principal BIT(1),
     usuario_id INT NOT NULL,
+    banco_id INT NOT NULL,
+    FOREIGN KEY (banco_id) REFERENCES users.bancos(id),
     FOREIGN KEY (usuario_id) REFERENCES users.usuarios(id)
 );

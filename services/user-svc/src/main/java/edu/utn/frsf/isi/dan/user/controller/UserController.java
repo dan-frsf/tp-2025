@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "User Controller", description = "Operaciones para la gestión de usuarios")
 @RestController
@@ -34,7 +35,7 @@ public class UserController {
 
     @Operation(summary = "Crear usuario propietario", description = "Crea un nuevo usuario de tipo propietario")
     @PostMapping("/propietario")
-    public ResponseEntity<Void> crearUsuarioPropietario(@RequestBody PropietarioRecord propietarioRecord) {
+    public ResponseEntity<Void> crearUsuarioPropietario(@RequestBody @Valid PropietarioRecord propietarioRecord) {
         userService.crearUsuarioPropietario(propietarioRecord);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
