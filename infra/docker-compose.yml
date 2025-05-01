@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.3                # versión recomendada
+    container_name: mysql-users
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: users         # se crea al iniciar
+      MYSQL_USER: usr_app
+      MYSQL_PASSWORD: usrapp
+      MYSQL_ROOT_PASSWORD: rootpwd
+      TZ: America/Argentina/Cordoba
+    ports:                          # solo para desarrollo
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql   # persistencia
+      - ./mysql/initdb/:/docker-entrypoint-initdb.d/:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "6080:80"
+    depends_on:
+      - mysql
+    
+
+volumes:
+  mysql_data:
