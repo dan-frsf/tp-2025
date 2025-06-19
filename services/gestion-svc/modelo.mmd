@@ -1,51 +1,68 @@
+---
+title: Diagrama de Clases - gestion-svc model
+---
 classDiagram
-    %% ========= Clases =========
-    class Usuario {
-        +Integer id
-        +String nombre
-        +String email
-        +String telefono
+    class Hotel {
+        Integer id
+        String nombre
+        String cuit
+        String domicilio
+        Double latitud
+        Double longitud
+        String telefono
+        String correoContacto
+        Integer categoria
+        List~Habitacion~ habitaciones
+        List~AmenityHotel~ amenities
     }
-
-    class Propietario {
-        +CuentaBancaria cuentaBancaria
-        +Long idHotel
+    class Habitacion {
+        Integer id
+        Integer numero
+        Integer piso
+        TipoHabitacion tipoHabitacion
     }
-
-    class Huesped {
-        +LocalDate fechaNacimiento
-        +List~TarjetaCredito~ tarjetaCredito
+    class TipoHabitacion {
+        Integer id
+        String nombre
+        String descripcion
+        Integer capacidad
     }
-
-    class Banco {
-        +Integer id
-        +String nombre
+    class Tarifa {
+        Integer id
+        LocalDate fechaInicio
+        LocalDate fechaFin
+        TipoHabitacion tipoHabitacion
+        Double precioNoche
     }
-
-    class CuentaBancaria {
-        +Integer id
-        +String numeroCuenta
-        +String cbu
-        +String alias
+    class AmenityHotel {
+        Long id
+        Hotel hotlel
+        Amenity amenity
     }
-
-    class TarjetaCredito {
-        +String numero
-        +String nombreTitular
-        +String fechaVencimiento
-        +String cvc
-        +Boolean esPrincipal
+    class Amenity {
+        <<enum>>
+        PILETA
+        SAUNA
+        GIMNASIO
+        RESTAURANTE
+        BAR
+        ESTACIONAMIENTO
+        WIFI
+        AIRE_ACONDICIONADO
+        CALENTADOR
+        TV_CABLE
+        SERVICIO_HABITACIONES
+        LIMPIEZA_DIARIA
+        PISCINA_CUBIERTA
+        PISCINA_DESCUBIERTA
+        SPA
+        SALA_JUEGOS
+        SALA_REUNIONES
+        TRANSPORTE_AEROPUERTO
     }
-
-    %% ========= Relaciones =========
-    Usuario <|-- Propietario
-    Usuario <|-- Huesped
-
-    Propietario  "1" --> "1"      CuentaBancaria : posee
-    CuentaBancaria "1" --> "1"    Banco          : pertenece
-
-    Huesped      "1" --> "0..*"   TarjetaCredito : tiene
-    TarjetaCredito "0..*" --> "1" Banco          : emitida~por
-    TarjetaCredito "0..*" --> "1" Huesped        : pertenece~a
-
-    Banco        "1" --> "0..*"   CuentaBancaria : ofrece
+    Hotel --> Habitacion : habitaciones
+    Hotel --> AmenityHotel : amenities
+    AmenityHotel --> Hotel : hotlel
+    AmenityHotel --> Amenity : amenity
+    Habitacion --> TipoHabitacion : tipoHabitacion
+    Tarifa --> TipoHabitacion : tipoHabitacion

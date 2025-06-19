@@ -1,0 +1,20 @@
+{
+  "habitacionId": 999999,        // roomId
+    "capacity": 2,
+    "baseRate": { "amount": 45000, "currency": "ARS" },
+    "amenities": ["wifi", "tv", "aire" ],
+    "hotel": {
+      "_id": 99999988,      // hotelId
+      "name": "Hotel Buenos Aires",
+      "location": {
+        "address": "Av. Corrientes 1234",
+        "city": "Buenos Aires",
+        "country": "Argentina"
+      }
+    },
+    "reservas": [{
+        "_id":ObjectId("..."),
+        "checkIn": ISODate("2025-06-05"),
+        "checkOut": ISODate("2025-06-10")
+    }]
+}

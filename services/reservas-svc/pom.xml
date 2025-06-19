@@ -11,7 +11,7 @@
 	<groupId>edu.utn.frsf.isi.dan</groupId>
 	<artifactId>reservas-svc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>reservas-svc</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -35,6 +35,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>edu.utn.frsf.isi.dan</groupId>
+    		<artifactId>dan-common-lib</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>

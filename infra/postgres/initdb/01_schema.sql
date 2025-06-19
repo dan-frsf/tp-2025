@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS tp_dan.hotel (
     longitud decimal(10,7),
     telefono varchar(30),
     correo_contacto varchar(100),
-    categoria varchar(50)
+    categoria integer NOT NULL
 );
 
 -- Tabla tipo_habitacion
@@ -64,5 +64,21 @@ CREATE TABLE IF NOT EXISTS tp_dan.habitacion (
     id integer PRIMARY KEY DEFAULT nextval('tp_dan.habitacion_id_seq'),
     numero integer NOT NULL,
     piso integer NOT NULL,
-    id_tipo integer NOT NULL REFERENCES tp_dan.tipo_habitacion(id)
+    id_tipo integer NOT NULL REFERENCES tp_dan.tipo_habitacion(id),
+    id_hotel integer NOT NULL REFERENCES tp_dan.hotel(id)
+);
+
+-- Secuencia para amenity_hotel_id_seq
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_class WHERE relname = 'amenity_hotel_id_seq') THEN
+        CREATE SEQUENCE tp_dan.amenity_hotel_id_seq;
+    END IF;
+END$$;
+
+-- Tabla amenity_hotel
+CREATE TABLE IF NOT EXISTS tp_dan.amenity_hotel (
+    id integer PRIMARY KEY DEFAULT nextval('tp_dan.amenity_hotel_id_seq'),
+    id_hotel integer NOT NULL REFERENCES tp_dan.hotel(id),
+    amenity varchar(250) NOT NULL
 );
