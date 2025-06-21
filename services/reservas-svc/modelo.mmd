@@ -1,0 +1,78 @@
+---
+title: Diagrama de Clases - reservas-svc model
+---
+classDiagram
+    class Reserva {
+        String _id
+        String idHabitacion
+        Long hotelId
+        Instant createdAt
+        Instant checkIn
+        Instant checkOut
+        Tarifa tarifaAplicada
+        String status
+        Double precioPorNoche
+        Double precioTotal
+        Huesped huesped
+        List~Pago~ pago
+        Review clientReview
+        Review hostReview
+        EstadoReserva estadoReserva
+    }
+    class Pago {
+        String method
+        String transactionId
+        Tarifa amount
+        String status
+    }
+    class Review {
+        double rating
+        String comment
+        String createdAt
+    }
+    class Huesped {
+        String idUsuario
+        String nombreApellido
+        String email
+    }
+    class EstadoReserva {
+        <<enum>>
+        CANCELADA
+        CONFIRMADA
+        PENDIENTE
+        FINALIZADA
+        PAGO_PENDIENTE
+        BLOQUEADA
+    }
+    class Habitacion {
+        String _id
+        Long habitacionId
+        int capacidad
+        Double precioNoche
+        int idTipoHabitacion
+        String tipoHabitacion
+        Tarifa tarifaBase
+        List~String~ amenities
+        List~ReservaSimple~ reservas
+        Hotel hotel
+    }
+    class Hotel {
+        long id
+        String nombre
+        Integer categoria
+        String domicilio
+        GeoJsonPoint ubicacion
+    }
+    class ReservaSimple {
+        String _id
+        Instant checkIn
+        Instant checkOut
+        EstadoReserva estadoReserva
+    }
+    Reserva --> Huesped : huesped
+    Reserva --> Pago : pago
+    Reserva --> Review : clientReview
+    Reserva --> Review : hostReview
+    Reserva --> EstadoReserva : estadoReserva
+    Habitacion --> ReservaSimple : reservas
+    Habitacion --> Hotel : hotel

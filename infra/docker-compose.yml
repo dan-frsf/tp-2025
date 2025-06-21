@@ -33,7 +33,126 @@ services:
       - "6080:80"
     depends_on:
       - mysql
-    
+
+  postgres:
+    image: postgres:16
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppwd
+      TZ: America/Argentina/Cordoba
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/initdb/:/docker-entrypoint-initdb.d/:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "6081:80"
+    depends_on:
+      - postgres
+    volumes:
+      - ./pgadmin/config/servers/:/pgadmin4/servers/
+      - pgadmin_data:/var/lib/pgadmin
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"   # puerto para aplicaciones
+      - "15672:15672" # puerto para la consola web de administración
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      # Monta el archivo de definiciones en la ruta que lee RabbitMQ al arrancar
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpwd
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: rootpwd
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    ports:
+      - "6091:8081"
+    depends_on:
+      - mongodb
+
+  user-svc:
+    build:
+      context: ../services/user-svc
+    container_name: user-svc
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mongodb
+      - mysql
+      - rabbitmq
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+
+  reservas-svc:
+    build:
+      context: ../services/reservas-svc
+    container_name: reservas-svc
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mongodb
+      - rabbitmq
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+
+  gestion-svc:
+    build:
+      context: ../services/gestion-svc
+    container_name: gestion-svc
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    depends_on:
+      - mysql
+      - rabbitmq
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+
+
 
 volumes:
   mysql_data:
+  postgres_data:
+  pgadmin_data:
+  mongo_data:

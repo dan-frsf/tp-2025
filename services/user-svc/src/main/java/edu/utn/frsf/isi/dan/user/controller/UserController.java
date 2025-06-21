@@ -4,9 +4,13 @@ import edu.utn.frsf.isi.dan.user.dto.HuespedRecord;
 import edu.utn.frsf.isi.dan.user.dto.PropietarioRecord;
 import edu.utn.frsf.isi.dan.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import edu.utn.frsf.isi.dan.user.model.Usuario;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,5 +42,25 @@ public class UserController {
     public ResponseEntity<Void> crearUsuarioPropietario(@RequestBody @Valid PropietarioRecord propietarioRecord) {
         userService.crearUsuarioPropietario(propietarioRecord);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public Page<Usuario> buscarUsuariosPorNombre(@RequestParam(required = false) String nombre, Pageable pageable) {
+        if (nombre == null || nombre.isEmpty()) {
+            return userService.buscarPorNombre("", pageable);
+        }
+        return userService.buscarPorNombre(nombre, pageable);
+    }
+
+    @GetMapping("/dni/{dni}")
+    public ResponseEntity<Usuario> buscarUsuarioPorDni(@PathVariable String dni) {
+        Usuario usuario = userService.buscarPorDniExacto(dni);
+        if (usuario == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(usuario);
+    }
+
+    @GetMapping("/buscar-dni")
+    public Page<Usuario> buscarUsuariosPorDni(@RequestParam String dni, Pageable pageable) {
+        return userService.buscarPorDni(dni, pageable);
     }
 }

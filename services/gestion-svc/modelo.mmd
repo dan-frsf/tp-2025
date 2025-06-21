@@ -1,0 +1,68 @@
+---
+title: Diagrama de Clases - gestion-svc model
+---
+classDiagram
+    class Hotel {
+        Integer id
+        String nombre
+        String cuit
+        String domicilio
+        Double latitud
+        Double longitud
+        String telefono
+        String correoContacto
+        Integer categoria
+        List~Habitacion~ habitaciones
+        List~AmenityHotel~ amenities
+    }
+    class Habitacion {
+        Integer id
+        Integer numero
+        Integer piso
+        TipoHabitacion tipoHabitacion
+    }
+    class TipoHabitacion {
+        Integer id
+        String nombre
+        String descripcion
+        Integer capacidad
+    }
+    class Tarifa {
+        Integer id
+        LocalDate fechaInicio
+        LocalDate fechaFin
+        TipoHabitacion tipoHabitacion
+        Double precioNoche
+    }
+    class AmenityHotel {
+        Long id
+        Hotel hotlel
+        Amenity amenity
+    }
+    class Amenity {
+        <<enum>>
+        PILETA
+        SAUNA
+        GIMNASIO
+        RESTAURANTE
+        BAR
+        ESTACIONAMIENTO
+        WIFI
+        AIRE_ACONDICIONADO
+        CALENTADOR
+        TV_CABLE
+        SERVICIO_HABITACIONES
+        LIMPIEZA_DIARIA
+        PISCINA_CUBIERTA
+        PISCINA_DESCUBIERTA
+        SPA
+        SALA_JUEGOS
+        SALA_REUNIONES
+        TRANSPORTE_AEROPUERTO
+    }
+    Hotel --> Habitacion : habitaciones
+    Hotel --> AmenityHotel : amenities
+    AmenityHotel --> Hotel : hotlel
+    AmenityHotel --> Amenity : amenity
+    Habitacion --> TipoHabitacion : tipoHabitacion
+    Tarifa --> TipoHabitacion : tipoHabitacion

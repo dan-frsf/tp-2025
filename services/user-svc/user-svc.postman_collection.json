@@ -1,0 +1,94 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "TP2025 User & Reservas API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Crear Huesped",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Carla Gómez\",\n  \"email\": \"carla@example.com\",\n  \"telefono\": \"+54 9 342-555-1234\",\n  \"fechaNacimiento\": \"1990-01-01\",\n  \"numeroCC\": \"1234567890123456\",\n  \"nombreTitular\": \"Carla Gómez\",\n  \"fechaVencimientoCC\": \"12/25\",\n  \"cvcCC\": \"123\",\n  \"esPrincipalCC\": true,\n  \"idBanco\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/users/huesped",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["users", "huesped"]
+        }
+      }
+    },
+    {
+      "name": "Crear Propietario",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Juan Perez\",\n  \"email\": \"juan@example.com\",\n  \"telefono\": \"+54 9 342-555-5678\",\n  \"idHotel\": null,\n  \"cuentaBancaria\": {\n    \"numeroCuenta\": \"123456789\",\n    \"cbu\": \"1230001230001230001234\",\n    \"alias\": \"juanperez\",\n    \"idBanco\": 1\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/users/propietario",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["users", "propietario"]
+        }
+      }
+    },
+    {
+      "name": "Buscar usuarios por nombre",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/users?nombre=Carla",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["users"],
+          "query": [
+            { "key": "nombre", "value": "Carla" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Buscar usuario por DNI exacto",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/users/dni/12345678",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["users", "dni", "12345678"]
+        }
+      }
+    },
+    {
+      "name": "Buscar usuarios por coincidencia de DNI",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/users/buscar-dni?dni=1234",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["users", "buscar-dni"],
+          "query": [
+            { "key": "dni", "value": "1234" }
+          ]
+        }
+      }
+    }
+  ]
+}

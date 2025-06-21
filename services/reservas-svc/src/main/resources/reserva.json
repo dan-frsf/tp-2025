@@ -1,0 +1,32 @@
+{
+  "_id": ObjectId("..."), 
+  "habitacionId": 999999,
+  "hotelId": 9999998,
+  "createdAt": ISODate("2025-05-31T12:05:00Z"),
+  "checkIn":  ISODate("2025-06-05"),
+  "checkOut": ISODate("2025-06-10"),
+  "appliedRate": { "amount": 48000, "currency": "ARS" },
+  "status": "CONFIRMED",         // CONFIRMED | PAID | CANCELLED
+  "guest": {
+     "id_usuario": "1234556",
+     "fullName": "Carla Gómez",
+     "email": "carla@example.com",
+     "phone": "+54 9 342-555-1234"
+  },
+  "payment": {
+    "method": "CREDIT_CARD",      // CREDIT_CARD | DEBIT_CARD | PAYPAL
+    "transactionId": "txn_123456789",
+    "amount": { "amount": 50000, "currency": "ARS" },
+    "status": "COMPLETED"         // PENDING | COMPLETED | FAILED
+  },
+  "clientReview": {
+    "rating": 4.5,               // Rating from 1 to 5
+    "comment": "Excelente servicio y habitación muy cómoda.",
+    "createdAt": ISODate("2025-06-11T10:00:00Z")
+  },
+  "hostReview": {
+    "rating": 4.5,               // Rating from 1 to 5
+    "comment": "Excelente cliente y habitación muy cómoda.",
+    "createdAt": ISODate("2025-06-11T10:00:00Z")
+  }
+}

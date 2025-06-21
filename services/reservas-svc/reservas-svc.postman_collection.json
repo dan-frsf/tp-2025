@@ -1,0 +1,167 @@
+{
+  "info": {
+    "_postman_id": "b1c2d3e4-f5a6-7890-bcde-ef9876543210",
+    "name": "Reservas SVC API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Habitaciones - Obtener todas",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/habitaciones",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["habitaciones"]
+        }
+      }
+    },
+    {
+      "name": "Habitaciones - Obtener por ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/habitaciones/999999",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["habitaciones", "999999"]
+        }
+      }
+    },
+    {
+      "name": "Habitaciones - Crear",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"habitacionId\": 999999,\n  \"capacity\": 2,\n  \"baseRate\": { \"amount\": 45000, \"currency\": \"ARS\" },\n  \"amenities\": [\"wifi\", \"tv\", \"aire\"],\n  \"hotel\": {\n    \"_id\": 99999988,\n    \"name\": \"Hotel Buenos Aires\",\n    \"location\": {\n      \"address\": \"Av. Corrientes 1234\",\n      \"city\": \"Buenos Aires\",\n      \"country\": \"Argentina\"\n    }\n  },\n  \"reservas\": []\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/habitaciones",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["habitaciones"]
+        }
+      }
+    },
+    {
+      "name": "Habitaciones - Actualizar",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"habitacionId\": 999999,\n  \"capacity\": 3,\n  \"baseRate\": { \"amount\": 50000, \"currency\": \"ARS\" },\n  \"amenities\": [\"wifi\", \"tv\", \"aire\", \"frigobar\"],\n  \"hotel\": {\n    \"_id\": 99999988,\n    \"name\": \"Hotel Buenos Aires\",\n    \"location\": {\n      \"address\": \"Av. Corrientes 1234\",\n      \"city\": \"Buenos Aires\",\n      \"country\": \"Argentina\"\n    }\n  },\n  \"reservas\": []\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/habitaciones/999999",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["habitaciones", "999999"]
+        }
+      }
+    },
+    {
+      "name": "Habitaciones - Eliminar",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:8080/habitaciones/999999",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["habitaciones", "999999"]
+        }
+      }
+    },
+    {
+      "name": "Reservas - Obtener todas",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/reservas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["reservas"]
+        }
+      }
+    },
+    {
+      "name": "Reservas - Obtener por ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/reservas/1234567890abcdef",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["reservas", "1234567890abcdef"]
+        }
+      }
+    },
+    {
+      "name": "Reservas - Crear",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"habitacionId\": 999999,\n  \"hotelId\": 9999998,\n  \"createdAt\": \"2025-05-31T12:05:00Z\",\n  \"checkIn\": \"2025-06-05\",\n  \"checkOut\": \"2025-06-10\",\n  \"appliedRate\": { \"amount\": 48000, \"currency\": \"ARS\" },\n  \"status\": \"CONFIRMED\",\n  \"guest\": {\n    \"id_usuario\": \"1234556\",\n    \"fullName\": \"Carla Gómez\",\n    \"email\": \"carla@example.com\",\n    \"phone\": \"+54 9 342-555-1234\"\n  },\n  \"payment\": {\n    \"method\": \"CREDIT_CARD\",\n    \"transactionId\": \"txn_123456789\",\n    \"amount\": { \"amount\": 50000, \"currency\": \"ARS\" },\n    \"status\": \"COMPLETED\"\n  },\n  \"clientReview\": null,\n  \"hostReview\": null\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/reservas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["reservas"]
+        }
+      }
+    },
+    {
+      "name": "Reservas - Actualizar",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"habitacionId\": 999999,\n  \"hotelId\": 9999998,\n  \"createdAt\": \"2025-05-31T12:05:00Z\",\n  \"checkIn\": \"2025-06-05\",\n  \"checkOut\": \"2025-06-10\",\n  \"appliedRate\": { \"amount\": 48000, \"currency\": \"ARS\" },\n  \"status\": \"PAID\",\n  \"guest\": {\n    \"id_usuario\": \"1234556\",\n    \"fullName\": \"Carla Gómez\",\n    \"email\": \"carla@example.com\",\n    \"phone\": \"+54 9 342-555-1234\"\n  },\n  \"payment\": {\n    \"method\": \"CREDIT_CARD\",\n    \"transactionId\": \"txn_123456789\",\n    \"amount\": { \"amount\": 50000, \"currency\": \"ARS\" },\n    \"status\": \"COMPLETED\"\n  },\n  \"clientReview\": {\n    \"rating\": 4.5,\n    \"comment\": \"Excelente servicio y habitación muy cómoda.\",\n    \"createdAt\": \"2025-06-11T10:00:00Z\"\n  },\n  \"hostReview\": {\n    \"rating\": 4.5,\n    \"comment\": \"Excelente cliente y habitación muy cómoda.\",\n    \"createdAt\": \"2025-06-11T10:00:00Z\"\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/reservas/1234567890abcdef",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["reservas", "1234567890abcdef"]
+        }
+      }
+    },
+    {
+      "name": "Reservas - Eliminar",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:8080/reservas/1234567890abcdef",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["reservas", "1234567890abcdef"]
+        }
+      }
+    }
+  ]
+}
