@@ -149,7 +149,19 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: default
 
-
+  dan-spring-gateway:
+    build:
+      context: ../common/dan-spring-gateway
+    container_name: dan-spring-gateway
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-svc
+      - reservas-svc
+      - gestion-svc
+    environment:
+      SPRING_PROFILES_ACTIVE: default
 
 volumes:
   mysql_data:

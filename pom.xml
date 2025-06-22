@@ -83,11 +83,22 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>2025.0.0</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
   <modules>
     <module>services/user-svc</module>
     <module>services/gestion-svc</module>
     <module>services/reservas-svc</module>
     <module>common/dan-common-lib</module>
+    <module>common/dan-spring-gateway</module>
   </modules>
 </project>
