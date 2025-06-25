@@ -1,0 +1,69 @@
+{
+  "valid_reservation": {
+    "description": "Valid reservation request with user validation",
+    "request": {
+      "idHabitacion": "1",
+      "hotelId": 1,
+      "createdAt": "2025-06-25T10:00:00Z",
+      "checkIn": "2025-06-26T15:00:00Z",
+      "checkOut": "2025-06-28T11:00:00Z",
+      "precioNoche": 150.0,
+      "precioTotal": 300.0,
+      "status": "PENDING",
+      "huesped": {
+        "idUsuario": "1",
+        "nombreApellido": "Juan Pérez",
+        "email": "juan.perez@email.com"
+      }
+    }
+  },
+  "invalid_user_reservation": {
+    "description": "Reservation with non-existent user (will be validated via Feign)",
+    "request": {
+      "idHabitacion": "1",
+      "hotelId": 1,
+      "createdAt": "2025-06-25T10:00:00Z",
+      "checkIn": "2025-06-26T15:00:00Z",
+      "checkOut": "2025-06-28T11:00:00Z",
+      "precioNoche": 150.0,
+      "precioTotal": 300.0,
+      "status": "PENDING",
+      "huesped": {
+        "idUsuario": "999",
+        "nombreApellido": "Usuario Inexistente",
+        "email": "noexiste@email.com"
+      }
+    }
+  },
+  "invalid_user_id_format": {
+    "description": "Reservation with invalid user ID format",
+    "request": {
+      "idHabitacion": "1",
+      "hotelId": 1,
+      "createdAt": "2025-06-25T10:00:00Z",
+      "checkIn": "2025-06-26T15:00:00Z",
+      "checkOut": "2025-06-28T11:00:00Z",
+      "precioNoche": 150.0,
+      "precioTotal": 300.0,
+      "status": "PENDING",
+      "huesped": {
+        "idUsuario": "invalid_id",
+        "nombreApellido": "Usuario con ID inválido",
+        "email": "invalid@email.com"
+      }
+    }
+  },
+  "reservation_without_user": {
+    "description": "Reservation without user (no validation performed)",
+    "request": {
+      "idHabitacion": "1",
+      "hotelId": 1,
+      "createdAt": "2025-06-25T10:00:00Z",
+      "checkIn": "2025-06-26T15:00:00Z",
+      "checkOut": "2025-06-28T11:00:00Z",
+      "precioNoche": 150.0,
+      "precioTotal": 300.0,
+      "status": "PENDING"
+    }
+  }
+}

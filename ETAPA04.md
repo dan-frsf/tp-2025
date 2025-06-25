@@ -225,9 +225,80 @@ curl http://localhost:8083/info
 6. **Containerización**: Configuración optimizada para despliegue en Docker
 7. **Alta Disponibilidad**: Múltiples instancias del mismo servicio registradas en Eureka
 
+## 6. Comunicación entre Microservicios con OpenFeign
+
+### Escenario Implementado: Validación de Reservas
+Se implementó comunicación sincrónica entre microservicios usando OpenFeign en el servicio `reservas-svc` para validar datos al crear una reserva.
+
+#### Dependencias Agregadas
+**Archivo modificado**: `services/reservas-svc/pom.xml`
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+
+#### Habilitación de Feign Clients
+**Archivo modificado**: `ReservasSvcApplication.java`
+```java
+@SpringBootApplication
+@EnableFeignClients
+public class ReservasSvcApplication {
+```
+
+#### Clientes Feign Creados
+
+**UserServiceClient**: Para validar huéspedes
+```java
+@FeignClient(name = "user-svc")
+public interface UserServiceClient {
+    @GetMapping("/huespedes/{id}")
+    UserDto getHuesped(@PathVariable("id") Long id);
+}
+```
+
+**GestionServiceClient**: Para validar hoteles y habitaciones
+```java
+@FeignClient(name = "gestion-svc")
+public interface GestionServiceClient {
+    @GetMapping("/hoteles/{id}")
+    HotelDto getHotel(@PathVariable("id") Long id);
+    
+    @GetMapping("/habitaciones/{id}")
+    HabitacionDto getHabitacion(@PathVariable("id") Long id);
+    
+    @GetMapping("/habitaciones/{id}/disponible")
+    Boolean isHabitacionDisponible(@PathVariable("id") Long id);
+}
+```
+
+#### DTOs de Comunicación
+Se crearon DTOs específicos para la comunicación entre servicios:
+- `UserDto`: Datos básicos del huésped
+- `HotelDto`: Información del hotel
+- `HabitacionDto`: Datos de la habitación
+
+#### Validación Implementada
+El método `validateReservation()` en `ReservaService` realiza las siguientes validaciones:
+
+1. **Validación de Huésped**: Verifica que el huésped existe en `user-svc`
+2. **Validación de Hotel**: Confirma que el hotel existe en `gestion-svc`
+3. **Validación de Habitación**: 
+   - Verifica que la habitación existe
+   - Confirma que pertenece al hotel especificado
+   - Valida que está disponible para reserva
+
+#### Beneficios de la Implementación
+- **Service Discovery**: Los clientes Feign usan automáticamente Eureka para encontrar servicios
+- **Load Balancing**: Distribución automática de carga entre instancias escaladas
+- **Circuit Breaker**: Protección contra fallos de servicios dependientes
+- **Validación Robusta**: Garantiza integridad de datos en reservas
+
 ## Notas Técnicas
 
 - Se utilizó Spring Cloud Gateway MVC en lugar de WebFlux para mayor compatibilidad
 - Los servicios mantienen compatibilidad con ejecución local (sin Eureka) y con Docker
 - La configuración permite sobrescribir puertos mediante variables de entorno
 - Eureka Server configurado con self-preservation deshabilitado para desarrollo
+- OpenFeign proporciona load balancing automático y circuit breaker out-of-the-box
