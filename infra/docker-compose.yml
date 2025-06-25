@@ -109,6 +109,16 @@ services:
     depends_on:
       - mongodb
 
+  dan-eureka-server:
+    build:
+      context: ../common/dan-eureka-server
+    container_name: dan-eureka-server
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+
   user-svc:
     build:
       context: ../services/user-svc
@@ -120,6 +130,7 @@ services:
       - mongodb
       - mysql
       - rabbitmq
+      - dan-eureka-server
     environment:
       SPRING_PROFILES_ACTIVE: default
 
@@ -133,6 +144,7 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+      - dan-eureka-server
     environment:
       SPRING_PROFILES_ACTIVE: default
 
@@ -146,6 +158,7 @@ services:
     depends_on:
       - mysql
       - rabbitmq
+      - dan-eureka-server
     environment:
       SPRING_PROFILES_ACTIVE: default
 
@@ -160,6 +173,7 @@ services:
       - user-svc
       - reservas-svc
       - gestion-svc
+      - dan-eureka-server
     environment:
       SPRING_PROFILES_ACTIVE: default
 

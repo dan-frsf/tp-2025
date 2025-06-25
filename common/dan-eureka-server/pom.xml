@@ -9,11 +9,11 @@
         <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
     <groupId>edu.utn.frsf.isi.dan</groupId>
-    <artifactId>dan-spring-gateway</artifactId>
+    <artifactId>dan-eureka-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>dan-spring-gateway</name>
-    <description>Gateway</description>
+    <name>dan-eureka-server</name>
+    <description>Eureka Server for Service Discovery</description>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -22,17 +22,9 @@
     </properties>
 
     <dependencies>
-        <!-- <dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
-		</dependency> -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway-server-webmvc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
     </dependencies>
 

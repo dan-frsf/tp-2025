@@ -100,5 +100,6 @@
     <module>services/reservas-svc</module>
     <module>common/dan-common-lib</module>
     <module>common/dan-spring-gateway</module>
+    <module>common/dan-eureka-server</module>
   </modules>
 </project>
