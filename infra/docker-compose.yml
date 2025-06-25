@@ -122,45 +122,51 @@ services:
   user-svc:
     build:
       context: ../services/user-svc
-    container_name: user-svc
+    # container_name: user-svc no usado con eureka
     restart: unless-stopped
-    ports:
-      - "8081:8080"
+    # ports:
+    #   - "8081:8081" no necesitamos exponer el puerto en el host lo accedemos a través del gateway
     depends_on:
       - mongodb
       - mysql
       - rabbitmq
       - dan-eureka-server
     environment:
-      SPRING_PROFILES_ACTIVE: default
+      SPRING_PROFILES_ACTIVE: eureka
+      SERVER_PORT: 8081
+      #SPRING_PROFILES_ACTIVE: default
 
   reservas-svc:
     build:
       context: ../services/reservas-svc
-    container_name: reservas-svc
+    # container_name: reservas-svc no usado con eureka
     restart: unless-stopped
-    ports:
-      - "8082:8080"
+    # ports:
+    #   - "8082:8082" no necesitamos exponer el puerto en el host lo accedemos a través del gateway
     depends_on:
       - mongodb
       - rabbitmq
       - dan-eureka-server
     environment:
-      SPRING_PROFILES_ACTIVE: default
+      SPRING_PROFILES_ACTIVE: eureka
+      SERVER_PORT: 8082
+      #SPRING_PROFILES_ACTIVE: default
 
   gestion-svc:
     build:
       context: ../services/gestion-svc
-    container_name: gestion-svc
+      # container_name: gestion-svc no usado con eureka
     restart: unless-stopped
-    ports:
-      - "8083:8080"
+    # ports:
+    #   - "8083:8083" no necesitamos exponer el puerto en el host lo accedemos a través del gateway
     depends_on:
       - mysql
       - rabbitmq
       - dan-eureka-server
     environment:
-      SPRING_PROFILES_ACTIVE: default
+      SPRING_PROFILES_ACTIVE: eureka
+      SERVER_PORT: 8083
+      #SPRING_PROFILES_ACTIVE: default
 
   dan-spring-gateway:
     build:
@@ -175,7 +181,9 @@ services:
       - gestion-svc
       - dan-eureka-server
     environment:
-      SPRING_PROFILES_ACTIVE: default
+      SPRING_PROFILES_ACTIVE: eureka
+      SERVER_PORT: 8080
+      #SPRING_PROFILES_ACTIVE: default
 
 volumes:
   mysql_data:
