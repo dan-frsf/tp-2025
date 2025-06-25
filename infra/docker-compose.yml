@@ -190,3 +190,8 @@ volumes:
   postgres_data:
   pgadmin_data:
   mongo_data:
+
+networks:
+  default:
+    external: true
+    name: observability

@@ -1,0 +1,51 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # OpenTelemetry Collector metrics
+  - job_name: 'otel-collector'
+    static_configs:
+      - targets: ['otel-collector:8889']
+    scrape_interval: 10s
+    metrics_path: /metrics
+
+  # Spring Boot microservices (through Docker network)
+  - job_name: 'user-svc'
+    static_configs:
+      - targets: ['user-svc:8080']
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s
+
+  - job_name: 'reservas-svc'
+    static_configs:
+      - targets: ['reservas-svc:8080']
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s
+
+  - job_name: 'gestion-svc'
+    static_configs:
+      - targets: ['gestion-svc:8080']
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s
+
+  - job_name: 'dan-spring-gateway'
+    static_configs:
+      - targets: ['dan-spring-gateway:8080']
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s
+
+  - job_name: 'dan-eureka-server'
+    static_configs:
+      - targets: ['dan-eureka-server:8761']
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s

@@ -7,7 +7,7 @@ import edu.utn.frsf.isi.dan.reservas_svc.model.Huesped;
 import edu.utn.frsf.isi.dan.reservas_svc.model.Reserva;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureTestRestTemplate;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -64,9 +64,9 @@ class ReservaControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reserva)))
                 .andExpect(status().isOk())
-                .andExpected(jsonPath("$.idHabitacion").value("1"))
-                .andExpected(jsonPath("$.hotelId").value(1))
-                .andExpected(jsonPath("$.huesped.idUsuario").value("1"));
+                .andExpect(jsonPath("$.idHabitacion").value("1"))
+                .andExpect(jsonPath("$.hotelId").value(1))
+                .andExpect(jsonPath("$.huesped.idUsuario").value("1"));
     }
     
     @Test

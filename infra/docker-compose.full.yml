@@ -1,0 +1,264 @@
+version: "3.9"
+
+services:
+  # Infrastructure services
+  mysql:
+    image: mysql:8.3
+    container_name: mysql-users
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: users
+      MYSQL_USER: usr_app
+      MYSQL_PASSWORD: usrapp
+      MYSQL_ROOT_PASSWORD: rootpwd
+      TZ: America/Argentina/Cordoba
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/initdb/:/docker-entrypoint-initdb.d/:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - observability
+
+  postgres:
+    image: postgres:16
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppwd
+      TZ: America/Argentina/Cordoba
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/initdb/:/docker-entrypoint-initdb.d/:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+    networks:
+      - observability
+
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpwd
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - observability
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+    networks:
+      - observability
+
+  # Observability Stack
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver
+      - "8889:8889"   # Prometheus metrics
+    depends_on:
+      - tempo
+      - loki
+      - prometheus
+    networks:
+      - observability
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    restart: unless-stopped
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./tempo/tempo-config.yaml:/etc/tempo.yaml
+      - tempo_data:/var/tempo
+    ports:
+      - "3200:3200"   # Tempo API
+    networks:
+      - observability
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+    ports:
+      - "3100:3100"
+    networks:
+      - observability
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: unless-stopped
+    volumes:
+      - ./promtail/promtail-config.yaml:/etc/promtail/config.yml
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - observability
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - observability
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+    networks:
+      - observability
+
+  # Microservices
+  dan-eureka-server:
+    build:
+      context: ../common/dan-eureka-server
+    container_name: dan-eureka-server
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+    networks:
+      - observability
+
+  user-svc:
+    build:
+      context: ../services/user-svc
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - rabbitmq
+      - dan-eureka-server
+      - otel-collector
+    environment:
+      SPRING_PROFILES_ACTIVE: eureka
+      SERVER_PORT: 8080
+    networks:
+      - observability
+
+  reservas-svc:
+    build:
+      context: ../services/reservas-svc
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - rabbitmq
+      - dan-eureka-server
+      - otel-collector
+    environment:
+      SPRING_PROFILES_ACTIVE: eureka
+      SERVER_PORT: 8080
+    networks:
+      - observability
+
+  gestion-svc:
+    build:
+      context: ../services/gestion-svc
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - rabbitmq
+      - dan-eureka-server
+      - otel-collector
+    environment:
+      SPRING_PROFILES_ACTIVE: eureka
+      SERVER_PORT: 8080
+    networks:
+      - observability
+
+  dan-spring-gateway:
+    build:
+      context: ../common/dan-spring-gateway
+    container_name: dan-spring-gateway
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - user-svc
+      - reservas-svc
+      - gestion-svc
+      - dan-eureka-server
+      - otel-collector
+    environment:
+      SPRING_PROFILES_ACTIVE: eureka
+      SERVER_PORT: 8080
+    networks:
+      - observability
+
+volumes:
+  mysql_data:
+  postgres_data:
+  mongo_data:
+  tempo_data:
+  loki_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  observability:
+    driver: bridge
